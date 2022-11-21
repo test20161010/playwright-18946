@@ -1,5 +1,4 @@
-import * as path from 'path';
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 const keepBrowserOpened = false;
 
@@ -9,17 +8,52 @@ test.afterAll(async ({ page }) => {
     }
 });
 
-test('local html file test', async ({ page }) => {
-    const absPath = path.resolve('./html/from.html');
-    await page.goto(`file:///${absPath}`);
-    const fromH1 = page.locator('//h1');
-    const title = await fromH1.innerText();
-    expect(title, 'FROM');
-    const link = page.locator('//a');
-    const linkName = await link.innerText();
-    expect(linkName, 'Send');
-    const [to] = await Promise.all([page.waitForEvent('popup'), link.click()]);
-    const toH1 = to.locator('//h1');
-    const toTitle = await toH1.innerText();
-    expect(toTitle, 'TO');
+// 1. Run `npx playwright test`.
+// 2. Immediately after the browser starts, hides the browser by bringing other windows such as VSCode to the foreground.
+// 3. Following result error occurs.
+
+test('Vertiacally long page test', async ({ page }) => {
+    await page.goto('https://www.google.com/', { timeout: 1000 * 30 });
+    await page.goto('https://playwright.dev/', { timeout: 1000 * 30 });
+    await page.goto('https://en.wikipedia.org/wiki/Main_Page', {
+        timeout: 1000 * 30,
+    });
+    const link = page.locator("//a[text()='About Wikipedia']");
+    await link.scrollIntoViewIfNeeded();
+    await link.click({ timeout: 1000 * 30 });
 });
+
+// <<result error>>
+// PS C:\Users\hn06343\dev\github\test20161010\playwright-18888> npx playwright test
+//
+// Running 1 test using 1 worker
+//   1) [firefox] › example.spec.ts:15:1 › Vertiacally long page test =================================
+//
+//     locator.scrollIntoViewIfNeeded: Timeout 4770.782000000589ms exceeded.
+//     =========================== logs ===========================
+//       waiting for element to be  and stable
+//     ============================================================
+//
+//       20 |     });
+//       21 |     const link = page.locator("//a[text()='About Wikipedia']");
+//     > 22 |     await link.scrollIntoViewIfNeeded();
+//          |                ^
+//       23 |     await link.click({ timeout: 1000 * 30 });
+//       24 | });
+//       25 |
+//
+//         at C:\Users\hn06343\dev\github\test20161010\playwright-18888\tests\example.spec.ts:22:16
+//
+//     attachment #1: trace (application/zip) ---------------------------------------------------------
+//     test-results\example-Vertiacally-long-page-test-firefox\trace.zip
+//     Usage:
+//
+//         npx playwright show-trace test-results\example-Vertiacally-long-page-test-firefox\trace.zip
+//
+//     ------------------------------------------------------------------------------------------------
+//
+//
+//   1 failed
+//     [firefox] › example.spec.ts:15:1 › Vertiacally long page test ==================================
+//
+//   Serving HTML report at http://localhost:9223. Press Ctrl+C to quit.

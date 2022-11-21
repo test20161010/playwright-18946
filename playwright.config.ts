@@ -54,30 +54,35 @@ const config: PlaywrightTestConfig = {
 
     /* Configure projects for major browsers */
     projects: [
+        /*
         {
             // Success at Chromium 107.0.5304.18
             name: 'chromium',
             use: {
                 ...devices['Desktop Chrome'],
-                // headless: false,
+                headless: false,
             },
         },
+        */
         {
-            // Success at Firefox Nightly 105.0.1
+            // NG at Firefox Nightly 105.0.1
             name: 'firefox',
             use: {
                 ...devices['Desktop Firefox'],
-                // headless: false,
+                headless: false,
+                ignoreHTTPSErrors: true,
             },
         },
+        /*
         {
-            // NG Case at Webkit 16.0
+            // Success at Webkit 16.0
             name: 'webkit',
             use: {
                 ...devices['Desktop Safari'],
-                // headless: false,
+                headless: false,
             },
         },
+        */
         /* Test against mobile viewports. */
         // {
         //   name: 'Mobile Chrome',
@@ -92,22 +97,26 @@ const config: PlaywrightTestConfig = {
         //   },
         // },
         /* Test against branded browsers. */
+        /*
         {
-            // Success at Edge 106.0.1370.52
+            // Success at Edge 107.0.1418.52
             name: 'Microsoft Edge',
             use: {
                 channel: 'msedge',
-                // headless: false,
+                headless: false,
             },
         },
+        */
+        /*
         {
             // Success at Chrome 107.0.5304.63
             name: 'Google Chrome',
             use: {
                 channel: 'chrome',
-                // headless: false,
+                headless: false,
             },
         },
+        */
     ],
 
     /* Folder for test artifacts such as screenshots, videos, traces, etc. */
